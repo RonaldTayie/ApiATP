@@ -1,5 +1,6 @@
 import base64
 import json
+import threading
 
 from django.core.paginator import Paginator
 from django.http import Http404
@@ -68,11 +69,14 @@ def post(request):
     if 'usefile' in data:
         with open("C:\\Users\\Maidport\\Documents\\Projects\\python\\ATP\\outlook.json",'r') as file:
             json_data = json.load(file)
-            result = process_parts_data(json_data)
-        return Response(result)
+            thread = threading.Thread(target=process_parts_data, args=(json_data,))
+            thread.start()
+
+        return Response("The data is being added...")
     else:
-        result = process_parts_data(data)
-        return Response(result)
+        thread = threading.Thread(target=process_parts_data, args=(data,))
+        thread.start()
+        return Response("The data is being added...")
 
 
 def get_part(request, id):

@@ -30,8 +30,8 @@ def process_parts_data(data):
         category, created = Category.objects.get_or_create(name=part_type)
 
         for content_data in content:
-            part_name = content_data.get('filename')
-            caption = content_data.get('caption')
+            part_name = content_data.get('caption')
+            caption = content_data.get('filename').split('.')[0]
             image_content = content_data.get('image')
 
             # Get or create the part
@@ -45,7 +45,8 @@ def process_parts_data(data):
             if image_content:
                 # Decode base64 and save the image
                 image_data = base64.b64decode(image_content)
-                image_name = f"{caption}.png"
+                image_name = f"{part_name}---{caption}.png"
+                image_name_db = f"part-images/{part_name}---{caption}.png"
                 image_path = os.path.join(settings.MEDIA_ROOT, 'part-images', image_name)
 
                 # Ensure the directory exists
@@ -56,4 +57,4 @@ def process_parts_data(data):
                     img_file.write(image_data)
 
                 # Save the image path in the database
-                PartImage.objects.create(part=part, image=image_name)
+                PartImage.objects.create(part=part, image=image_name_db,)

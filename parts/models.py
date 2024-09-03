@@ -1,11 +1,12 @@
 from django.db import models
 
+
 # Create your models here.
 class Category(models.Model):
-    name = models.CharField(max_length=255,unique=True)
+    name = models.CharField(max_length=255, unique=True)
     has_children = models.BooleanField(default=False)
     parent = models.ForeignKey(
-        'self',  
+        'self',
         on_delete=models.CASCADE,
         related_name='subcategories',
         blank=True,
@@ -19,7 +20,7 @@ class Category(models.Model):
         ancestry = []
         category = self
         while category.parent:
-            ancestry.insert(0, category.parent)  # Insert at the beginning to maintain order from top-level to the current category
+            ancestry.insert(0, category.parent)
             category = category.parent
         return ancestry
 
@@ -30,19 +31,20 @@ class Category(models.Model):
 
 
 class Part(models.Model):
-    category = models.ForeignKey(Category,on_delete=models.DO_NOTHING)
-    part = models.CharField(max_length=200,null=False)
+    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING)
+    part = models.CharField(max_length=200, null=False)
     part_description = models.TextField(blank=True)
 
     @property
-    def category_path(self) -> str :
+    def category_path(self) -> str:
         return self.category.get_full_path()
 
     def __str__(self):
         return f' {self.part} => {self.category.get_full_path()}'
 
+
 class PartImage(models.Model):
-    part = models.ForeignKey(Part,on_delete=models.CASCADE)
+    part = models.ForeignKey(Part, on_delete=models.CASCADE)
     image = models.ImageField(upload_to="part-images")
 
     def __str__(self) -> str:
@@ -73,7 +75,7 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
-    part = models.ForeignKey(Part,on_delete=models.DO_NOTHING)
+    part = models.ForeignKey(Part, on_delete=models.DO_NOTHING)
     quantity = models.PositiveIntegerField()
 
     def __str__(self):
