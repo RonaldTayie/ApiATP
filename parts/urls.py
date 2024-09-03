@@ -9,5 +9,5 @@ urlpatterns = [
     path('contact-us',TemplateView.as_view(template_name='views/contact-us.html')),
     path('cart',TemplateView.as_view(template_name='views/cart.html')),
     path('part/<str:id>',get_part,name="part"),
-    path('bulk-create-parts',upload_parts)
+    path('bulk-create-parts',post,name="bulk-create-parts")
 ]

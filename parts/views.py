@@ -1,14 +1,22 @@
+import base64
+import json
+
 from django.core.paginator import Paginator
 from django.http import Http404
 from django.shortcuts import render
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
+from ApiATP.helpers import process_parts_data
 from .forms.part_filter_form import PartFilterForm
 from .serializers import *
+
 
 class PartListView(ListView):
     model = Part
@@ -52,20 +60,24 @@ class PartListView(ListView):
         serializer = PartSerializer(page.object_list, many=True)
         return serializer.data
 
+
 @api_view(['POST'])
-@permission_classes([AllowAny,])
-def upload_parts(request):
+@permission_classes([AllowAny])
+def post(request):
     data = request.data
+    if 'usefile' in data:
+        with open("C:\\Users\\Maidport\\Documents\\Projects\\python\\ATP\\outlook.json",'r') as file:
+            json_data = json.load(file)
+            result = process_parts_data(json_data)
+        return Response(result)
+    else:
+        result = process_parts_data(data)
+        return Response(result)
 
-    category = Category( name=data['name'] )
 
-    content = data['content']
-    print(data)
-    return Response(status=status.HTTP_200_OK)
-
-def get_part(request,id):
+def get_part(request, id):
     part = Part.objects.get(part=id)
     if not part:
         raise Http404
     serializer = PartSerializer(part)
-    return render(request,'views/part.html',context={'part':serializer.data})
+    return render(request, 'views/part.html', context={'part': serializer.data})

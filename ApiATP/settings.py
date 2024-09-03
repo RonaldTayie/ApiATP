@@ -16,7 +16,7 @@ SECRET_KEY = 'django-insecure-2*9^%sf8vir6#x$59vz*oie+*&f3jhe0w8rsqef91ql8d2h%1f
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['maidport.pythonanywhere.com','*','localhost','127.0.0.1']
 
 
 # Application definition
@@ -100,9 +100,13 @@ REST_AUTH_SERIALIZERS = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'HOST': str(os.getenv('DATABASE_HOST')),
+        'NAME': str(os.getenv('DATABASE_NAME')),
+        'USER': str(os.getenv('DATABASE_USER')),
+        'PASSWORD': str(os.getenv('DATABASE_PASSWORD')),
+        'PORT': str(os.getenv('DATABASE_PORT'))
+    },
 }
 
 
