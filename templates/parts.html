@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="container content">
+    <div class="row mt-5">
+        <div class="sm-hidden col-md-2 col-lg-3">
+            <form method="get" action="" class="form">
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary btn-sm" >Filter</button>
+            </form>
+        </div>
+        <div class="col-sm-12 col-md-9 col-lg-9">
+            <div class="row no-gutters">
+                {% for part in parts %}
+                <div class="col-sm-6 col-md-3 col-lg-3">
+                    <div class="card w-100" 
+                         style="width: 18rem;" 
+                         data-part-id="{{ part.part }}" 
+                         data-category="{{ part.category.full_path }}"
+                         data-images="{{ part.images|escapejs }}"
+                    >
+                        <div id="carouselExampleFade" class="carousel slide carousel-fade">
+                            <div class="carousel-inner">
+                                {% for image in part.images %}
+                                  <div class="carousel-item{% if forloop.first %} active{% endif %}">
+                                    <img src="{{ image.image }}" class="d-block w-100" alt="...">
+                                  </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">{{ part.category.full_path }}</p>
+                            <h5 class="card-title">{{ part.part }}</h5>
+                            <div class="btn-group w-100" role="group">
+                                <a href="part/{{ part.part }}" class="btn btn-primary btn-sm">Show Part</a>
+                                <button type="button" class="btn btn-secondary add-to-cart" data-id="{{ part.part }}"><i class="fa fa-shopping-cart"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                <li>No parts available.</li>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

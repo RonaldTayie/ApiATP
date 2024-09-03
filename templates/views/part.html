@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<div class="container content">
+    <div class="row no-gutters mt-5">
+        <div class="col-12">
+            <div class="alert alert-secondary">
+                {{ part.category.full_path }}
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div id="carouselExampleFade" class="carousel slide carousel-fade">
+                <div class="carousel-inner">
+                    {% for image in part.images %}
+                        <div class="carousel-item active">
+                            <img src="{{ image.image }}" class="d-block w-100" alt="...">
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <table class="table table-striped">
+                <tbody>
+                    <tr>
+                        <td>Category</td>
+                        <td>{{ part.category.name }}</td>
+                    </tr>
+                    <tr>
+                        <td>Part #</td>
+                        <td>
+                            {{ part.part }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="text-start" >Description</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" >
+                            <p>
+                                {{ part.description }}
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
